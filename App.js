@@ -14,6 +14,7 @@ import {
   View,
   Text,
   StatusBar,
+  Button,
 } from 'react-native';
 
 import {
@@ -53,33 +54,12 @@ class App extends React.Component<{}> {
             )}
             <View style={styles.body}>
               <View style={styles.sectionContainer}>
-                <Text style={styles.sectionTitle}>Step One</Text>
-                <Text style={styles.sectionDescription}>
-                  Edit <Text style={styles.highlight}>App.js</Text> to change
-                  this screen and then come back to see your edits.
-                </Text>
+                <Text style={styles.centerText}>{this.state.counter}</Text>
+                <Button
+                  title="Press me"
+                  onPress={() => this.incrementCounter(two)}
+                />
               </View>
-              <View style={styles.sectionContainer}>
-                <Text style={styles.sectionTitle}>{this.state.counter}</Text>
-                <button onClick={() => this.incrementCounter(two)}> </button>
-                <Text style={styles.sectionTitle}>See Your Changes</Text>
-                <Text style={styles.sectionDescription}>
-                  <ReloadInstructions />
-                </Text>
-              </View>
-              <View style={styles.sectionContainer}>
-                <Text style={styles.sectionTitle}>Debug</Text>
-                <Text style={styles.sectionDescription}>
-                  <DebugInstructions />
-                </Text>
-              </View>
-              <View style={styles.sectionContainer}>
-                <Text style={styles.sectionTitle}>Learn More</Text>
-                <Text style={styles.sectionDescription}>
-                  Read the docs to discover what to do next:
-                </Text>
-              </View>
-              <LearnMoreLinks />
             </View>
           </ScrollView>
         </SafeAreaView>
@@ -107,6 +87,11 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '600',
     color: Colors.black,
+  },
+  centerText: {
+    padding: 7,
+    textAlign: 'center',
+    fontSize: 25,
   },
   sectionDescription: {
     marginTop: 8,
