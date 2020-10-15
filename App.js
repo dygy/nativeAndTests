@@ -5,8 +5,7 @@
  * @format
  * @flow strict-local
  */
-
-import React from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -16,7 +15,6 @@ import {
   StatusBar,
   Button,
 } from 'react-native';
-
 import {
   Header,
   LearnMoreLinks,
@@ -24,7 +22,9 @@ import {
   DebugInstructions,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-
+import {createStackNavigator} from '@react-navigation/stack';
+import {NavigationContainer, useNavigation} from '@react-navigation/native';
+const Stack = createStackNavigator();
 class App extends React.Component<{}> {
   constructor(props) {
     super(props);
@@ -32,40 +32,73 @@ class App extends React.Component<{}> {
       counter: 0,
     };
   }
-  incrementCounter = (two) => {
-    let counter;
-    counter = two ? this.state.counter + 2 : this.state.counter + 1;
+  incrementCounter = () => {
+    const counter = this.state.counter + 1;
     this.setState({counter});
+    console.log(this.state);
   };
   render() {
-    const {two} = this.props;
+    console.log(this.state);
     return (
-      <>
-        <StatusBar barStyle="dark-content" />
-        <SafeAreaView>
-          <ScrollView
-            contentInsetAdjustmentBehavior="automatic"
-            style={styles.scrollView}>
-            <Header />
-            {global.HermesInternal == null ? null : (
-              <View style={styles.engine}>
-                <Text style={styles.footer}>Engine: Hermes</Text>
-              </View>
-            )}
-            <View style={styles.body}>
-              <View style={styles.sectionContainer}>
-                <Text style={styles.centerText}>{this.state.counter}</Text>
-                <Button
-                  title="Press me"
-                  onPress={() => this.incrementCounter(two)}
-                />
-              </View>
-            </View>
-          </ScrollView>
-        </SafeAreaView>
-      </>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Home"
+            component={HomePage}
+            initialParams={{
+              self: this,
+            }}
+          />
+          <Stack.Screen name="Details" component={DetailsScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
     );
   }
+}
+function DetailsScreen() {
+  return (
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <Text>Details Screen</Text>
+    </View>
+  );
+}
+function HomePage({navigation, route}) {
+  console.log(route);
+  const [, setState] = useState();
+  const params = route.params;
+  const parent = params.self;
+  const calc = () => {
+    parent.incrementCounter();
+    setState({});
+  };
+  return (
+    <>
+      <StatusBar barStyle="dark-content" />
+      <SafeAreaView>
+        <ScrollView
+          contentInsetAdjustmentBehavior="automatic"
+          style={styles.scrollView}>
+          <Header />
+          {global.HermesInternal == null ? null : (
+            <View style={styles.engine}>
+              <Text style={styles.footer}>Engine: Hermes</Text>
+            </View>
+          )}
+          <View style={styles.body}>
+            <View style={styles.sectionContainer}>
+              <Text style={styles.centerText}>{parent.state.counter}</Text>
+              <Button title="Press me" onPress={calc} />
+              <Text />
+              <Button
+                title="go Details"
+                onPress={() => navigation.navigate('Details')}
+              />
+            </View>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -112,4 +145,6 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default function (props) {
+  return <App {...props} />;
+}
